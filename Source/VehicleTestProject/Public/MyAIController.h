@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "UObject/ConstructorHelpers.h"
 #include "MyAIVehicle.h"
-//#include "DQN/lib/DQNAgent.a"
+#include "Engine/TargetPoint.h"
+#include "Math/Vector.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "MyAIController.generated.h"
 
 
@@ -20,37 +18,32 @@ UCLASS()
 class VEHICLETESTPROJECT_API AMyAIController : public AAIController
 {
 	GENERATED_BODY()
-protected:
-	//DQNAgent* agent;
 
+private:
+	bool TurnRight = false;
+	bool TurnLeft = false;
+
+	FVector NeedLocation= FVector::ZeroVector;
+
+protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float Delta) override;
 
 	UFUNCTION(BlueprintCallable, Category="AI Manager")
 	void SetVehicleMovement(float ThrottleInput, float SteeringInput, bool HandbrakeInput);
 
-
 public:
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI Manager")
-	class UBehaviorTreeComponent* behaviorTreeComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exploring the environment")
+	ATargetPoint* ACurrentTargetPoint;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI Manager")
-	class UBehaviorTree* behaviorTree;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Exploring the environment")
+	float AcceptableRadius = 100.f;
 
-	UPROPERTY(BlueprintReadOnly, Category = "AI Manager")
-	bool learn = true;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Exploring the environment")
+	float VehicleSpeed = 0.75;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI Manager")
-	class UBlackboardComponent* myBlackboard;
 
-	UFUNCTION(BlueprintCallable, Category="AI Manager")
-	int GetNNResult(TArray<float> inputs, float currentRevard);
-
-	UFUNCTION(BlueprintCallable, Category="AI Manager")
-	void MoveVehicleUsingNN(TArray<float> inputs, float currentRevard);
-
-	AMyAIController(FObjectInitializer const& objectInitializer = FObjectInitializer::Get());
-
-	void OnPossess(APawn* const pawn) override;
-	void EndPlay(const EEndPlayReason::Type endPlayReason) override;
+	AMyAIController();
 };

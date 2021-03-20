@@ -8,6 +8,14 @@
 		}
 	],
 	"settings": {
-		"typescript.tsc.autoDetect": "off"
+		"typescript.tsc.autoDetect": "off",
+		"files.associations": {
+			"new": "cpp",
+			"vector": "cpp",
+			"exception": "cpp",
+			"initializer_list": "cpp",
+			"utility": "cpp",
+			"type_traits": "cpp"
+		}
 	}
 }

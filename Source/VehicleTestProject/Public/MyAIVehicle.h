@@ -42,12 +42,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
 	void GetLineTraceForward(bool &bHit, FVector &FNeedLocation);
 
-	UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
-	void GetLineTraceRight(bool &bHit, FVector &FNeedLocation);
-
-
-	UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
-	void GetLineTraceLeft(bool &bHit, FVector &FNeedLocation);
 
 	//UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
 	//void GetNormalizedLineTraceRight(float &RightLineHit, float &ForwardLineHit);

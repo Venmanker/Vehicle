@@ -61,64 +61,22 @@ void AMyAIVehicle::GetLineTraceForward(bool &bHit, FVector &FNeedLocation)
 	}
 	if(bHit)
 	{
-		auto Mirror = UKismetMathLibrary::MirrorVectorByNormal((FirstLineHit.Location - FStartFrontPoint), FirstLineHit.Normal);
-		Mirror  = Mirror / FVector::Distance(FStartFrontPoint, FirstLineHit.Location) * LineTraceLengthByForward / 2;
+		auto Mirror = UKismetMathLibrary::MirrorVectorByNormal((FirstLineHit.Location - FStartFrontPoint), FirstLineHit.Normal) / 3 * 2;
 		FNeedLocation = FirstLineHit.Location + Mirror;
-		
+		DrawDebugLine(GetWorld(), FirstLineHit.Location, FNeedLocation, FColor::Green,  false, 0.f, 0, 50.f);
+		if (GetWorld()->LineTraceSingleByChannel(SecondLineHit, FirstLineHit.Location, FNeedLocation, ECC_Visibility, FCollisionParams))
+		{
+
+			Mirror = UKismetMathLibrary::MirrorVectorByNormal((SecondLineHit.Location - FirstLineHit.Location), SecondLineHit.Normal) / 3 * 2;
+
+			FNeedLocation = SecondLineHit.Location + Mirror;
+			DrawDebugLine(GetWorld(), SecondLineHit.Location, FNeedLocation, FColor::Blue,  false, 0.f, 0, 50.f);
+		}
 		FNeedLocation.Z = GetActorLocation().Z;
 	}
 }
 
-void AMyAIVehicle::GetLineTraceRight(bool &bHit, FVector &FNeedLocation)
-{
-	FHitResult FirstLineHit;
-	FHitResult SecondLineHit;
-	FCollisionQueryParams FCollisionParams;
 
-	FVector FStartFrontPoint = GetActorLocation() + GetActorRotation().RotateVector(FCollisionBoxSize * FVector(1, -1, 0.5f));
-	FVector FEndFrontLine = FStartFrontPoint + GetActorForwardVector() * LineTraceLengthByForward + LineTraceDifferenceBySide * GetActorRightVector();
-	FEndFrontLine.Z = GetActorLocation().Z + FCollisionBoxSize.Z * 0.5;
-
-
-	bHit = GetWorld()->LineTraceSingleByChannel(FirstLineHit, FStartFrontPoint, FEndFrontLine, ECC_Visibility, FCollisionParams);
-	if(bDebug)
-	{
-		DrawDebugLine(GetWorld(), FStartFrontPoint, FEndFrontLine, FColor::Red,  false, 0.f, 0, 50.f);
-	}
-	if(bHit)
-	{
-		auto Mirror = UKismetMathLibrary::MirrorVectorByNormal((FirstLineHit.Location - FStartFrontPoint), FirstLineHit.Normal);
-		Mirror  = Mirror / FVector::Distance(FStartFrontPoint, FirstLineHit.Location) * LineTraceLengthByForward / 4;
-		FNeedLocation = FirstLineHit.Location + Mirror;
-		
-		FNeedLocation.Z = GetActorLocation().Z;
-	}
-}
-
-void AMyAIVehicle::GetLineTraceLeft(bool &bHit, FVector &FNeedLocation)
-{
-	FHitResult FirstLineHit;
-	FHitResult SecondLineHit;
-	FCollisionQueryParams FCollisionParams;
-
-	FVector FStartFrontPoint = GetActorLocation() + GetActorRotation().RotateVector(FCollisionBoxSize * FVector(1, 1, 0.5f));
-	FVector FEndFrontLine = FStartFrontPoint + GetActorForwardVector() * LineTraceLengthByForward - LineTraceDifferenceBySide * GetActorRightVector();
-	FEndFrontLine.Z = GetActorLocation().Z + FCollisionBoxSize.Z * 0.5;
-
-
-	bHit = GetWorld()->LineTraceSingleByChannel(FirstLineHit, FStartFrontPoint, FEndFrontLine, ECC_Visibility, FCollisionParams);
-	if(bDebug)
-	{
-		DrawDebugLine(GetWorld(), FStartFrontPoint, FEndFrontLine, FColor::Red,  false, 0.f, 0, 50.f);
-	}
-	if(bHit)
-	{
-		auto Mirror = UKismetMathLibrary::MirrorVectorByNormal((FirstLineHit.Location - FStartFrontPoint), FirstLineHit.Normal);
-		Mirror  = Mirror / FVector::Distance(FStartFrontPoint, FirstLineHit.Location) * LineTraceLengthByForward / 4;
-		FNeedLocation = FirstLineHit.Location + Mirror;
-		FNeedLocation.Z = GetActorLocation().Z;
-	}
-}
 
 ATargetPoint* AMyAIVehicle::GetNewTargetPoint()
 {

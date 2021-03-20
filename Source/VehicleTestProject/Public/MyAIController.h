@@ -38,7 +38,7 @@ public:
 	ATargetPoint* ACurrentTargetPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Exploring the environment")
-	float AcceptableRadius = 100.f;
+	float AcceptableRadius = 200.f;
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Exploring the environment")

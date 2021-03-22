@@ -17,11 +17,6 @@ void AMyAIController::SetVehicleMovement(float ThrottleInput = 1.f, float Steeri
 	AVehiclePawn->GetVehicleMovementComponent()->SetHandbrakeInput(HandbrakeInput);
 }
 
-AMyAIController::AMyAIController()
-{
-
-}
-
 void AMyAIController::Tick(float Delta)
 {
 	Super::Tick(Delta);
@@ -35,7 +30,7 @@ void AMyAIController::Tick(float Delta)
 		FVector FNewNeedLocation;
 		bool Result = false;
 		DrawDebugSphere(GetWorld(), ACurrentTargetPoint->GetActorLocation(), 100.f, 16, FColor::Red, false, -1, 0, 30.0);
-		if (TurnRight)
+		if (TurnRight || TurnLeft)
 		{
 			AVehiclePawn->GetLineTraceForward(Result, FNewNeedLocation);
 			if(Result)
@@ -44,7 +39,7 @@ void AMyAIController::Tick(float Delta)
 				auto FTempRotation = (UKismetMathLibrary::FindLookAtRotation(AVehiclePawn->GetActorLocation(), NeedLocation) - AVehiclePawn->GetActorRotation()); 
 				FTemp.Normalize();
 				FTempRotation.Normalize();
-				if(FTemp.Yaw > FTempRotation.Yaw)
+				if((FTemp.Yaw > FTempRotation.Yaw && TurnRight) ||(FTemp.Yaw < FTempRotation.Yaw && TurnLeft))
 				{
 					NeedLocation = FNewNeedLocation;
 				}
@@ -52,32 +47,6 @@ void AMyAIController::Tick(float Delta)
 			if(FVector::Distance(AVehiclePawn->GetActorLocation(), NeedLocation) < AcceptableRadius)
 			{
 				TurnRight = false;
-			}
-			else
-			{
-				auto FTempRotation = (UKismetMathLibrary::FindLookAtRotation(AVehiclePawn->GetActorLocation(), NeedLocation) - AVehiclePawn->GetActorRotation());
-				FTempRotation.Normalize(); 
-				SetVehicleMovement(1 - (UKismetMathLibrary::Abs(FTempRotation.Yaw /180)) , UKismetMathLibrary::SignOfFloat(FTempRotation.Yaw) * UKismetMathLibrary::Sqrt(UKismetMathLibrary::Abs(FTempRotation.Yaw)));
-				DrawDebugSphere(GetWorld(), NeedLocation, 100.f, 16, FColor::Green, false, -1, 0, 100.0);
-			}
-		}
-		if(TurnLeft)
-		{
-			AVehiclePawn->GetLineTraceForward(Result, FNewNeedLocation);
-			if(Result)
-			{
-				auto FTemp = (UKismetMathLibrary::FindLookAtRotation(AVehiclePawn->GetActorLocation(), FNewNeedLocation) - AVehiclePawn->GetActorRotation()); 
-				auto FTempRotation = (UKismetMathLibrary::FindLookAtRotation(AVehiclePawn->GetActorLocation(), NeedLocation) - AVehiclePawn->GetActorRotation()); 
-				FTemp.Normalize();
-				FTempRotation.Normalize();
-
-				if(FTemp.Yaw < FTempRotation.Yaw)
-				{
-					NeedLocation = FNewNeedLocation;
-				}
-			}
-			if(FVector::Distance(AVehiclePawn->GetActorLocation(), NeedLocation) < AcceptableRadius)
-			{
 				TurnLeft = false;
 			}
 			else
@@ -88,7 +57,7 @@ void AMyAIController::Tick(float Delta)
 				DrawDebugSphere(GetWorld(), NeedLocation, 100.f, 16, FColor::Green, false, -1, 0, 100.0);
 			}
 		}
-		if(!TurnLeft && !TurnRight)
+		else
 		{
 			AVehiclePawn->GetLineTraceForward(Result, NeedLocation);
 			if(Result)

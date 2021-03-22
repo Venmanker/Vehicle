@@ -27,43 +27,33 @@ class VEHICLETESTPROJECT_API AMyAIVehicle : public AWheeledVehicle
 	GENERATED_BODY()
 
 private:
+
 	AMyAIVehicle();
 
 public:
+
+	UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
+	void GetLineTraceForward(bool &bHit, FVector &FNeedLocation);
+
+	UFUNCTION(BlueprintCallable, Category="Exploring the environment")
+	ATargetPoint* GetNewTargetPoint();
+
+
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Overlap")
 	FVector FCollisionBoxSize = {230, 110, 74};
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Exploring the environment")
 	float LineTraceLengthByForward = 2200;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Exploring the environment")
-	float LineTraceDifferenceBySide = 50;
-
-	UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
-	void GetLineTraceForward(bool &bHit, FVector &FNeedLocation);
-
-
-	//UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
-	//void GetNormalizedLineTraceRight(float &RightLineHit, float &ForwardLineHit);
-	//UFUNCTION(BlueprintCallable, Category = "Exploring the environment")
-	//void GetNormalizedLineTraceLeft(float &LeftLineHit, float &ForwardLineHit);
-
-	UFUNCTION(BlueprintCallable, Category="Exploring the environment")
-	ATargetPoint* GetNewTargetPoint();
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Debug")
-	bool bDebug;
+	bool bDebug = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exploring the environment")
 	TArray<ATargetPoint*> ATargetPointList;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exploring the environment")
-	//float RotarorVector = 5.0f;
-
-
-
 protected:
+
 	virtual void BeginPlay() override;
 	
 	

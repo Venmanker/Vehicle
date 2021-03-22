@@ -23,7 +23,7 @@ private:
 	bool TurnRight = false;
 	bool TurnLeft = false;
 
-	FVector NeedLocation= FVector::ZeroVector;
+	FVector NeedLocation;
 
 protected:
 	virtual void BeginPlay() override;
@@ -38,12 +38,5 @@ public:
 	ATargetPoint* ACurrentTargetPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Exploring the environment")
-	float AcceptableRadius = 200.f;
-
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Exploring the environment")
-	float VehicleSpeed = 0.75;
-
-
-	AMyAIController();
+	float AcceptableRadius = 100.f;
 };
